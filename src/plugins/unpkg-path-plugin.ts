@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild-wasm';
 import axios from 'axios';
-export const unpkgPathPlugin = () => {
+export const unpkgPathPlugin = (inputCode: string) => {
   return {
     name: 'unpkg-path-plugin',
     setup(build: esbuild.PluginBuild) {
@@ -27,22 +27,20 @@ export const unpkgPathPlugin = () => {
 
       });
 
+      
       build.onLoad({ filter: /.*/ }, async (args: any) => {
         console.log('onLoad', args);
-
+        const loader = args.path.match(/.css/) ? 'css': 'jsx'
         if (args.path === 'index.js') {
           return {
-            loader: 'jsx',
-            contents: `
-              const message = require('react');
-              console.log(message);
-            `,
+            loader,
+            contents: inputCode,
           };
         }
  
         const { data, request } = await axios.get(args.path);
         return {
-          loader: 'jsx',
+          loader,
           contents: data,
           resolveDir: new URL('./', request.responseURL).pathname,
         };
