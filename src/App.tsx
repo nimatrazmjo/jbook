@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin'
 import * as esbuild from 'esbuild-wasm';
+import CodeEditor from './components/code-editor';
 
 const App: React.FC = () => {
   const ref = useRef({})
@@ -21,7 +22,7 @@ const App: React.FC = () => {
     startService();
   }, [ref])
 
-  const onClick = async (input: string ) => {
+  const onClick = async () => {
     if (!ref.current) return;
     iframe.current.srcdoc = html;
     const result = await esbuild.build({
@@ -61,10 +62,12 @@ const App: React.FC = () => {
   `;
   return (
     <div className="app-component">
-      <textarea name="code" id="code" value={input} onChange={e => {setInput(e.target.value);onClick(e.target.value)}} ></textarea>
+      <CodeEditor />
+      <textarea name="code" id="code" value={input} onChange={e => setInput(e.target.value)} ></textarea>
       <div className="button">
+        <button onClick={onClick}>Submit</button>
       </div>
-      <iframe title='Code preview' ref={iframe} srcDoc={html}> {code}</iframe>
+      <iframe title='Code' ref={iframe} srcDoc={html}> {code}</iframe>
     </div>
   )
 
