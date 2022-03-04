@@ -21,7 +21,7 @@ const App: React.FC = () => {
     startService();
   }, [ref])
 
-  const onClick = async () => {
+  const onClick = async (input: string ) => {
     if (!ref.current) return;
     iframe.current.srcdoc = html;
     const result = await esbuild.build({
@@ -61,9 +61,8 @@ const App: React.FC = () => {
   `;
   return (
     <div className="app-component">
-      <textarea name="code" id="code" value={input} onChange={e => setInput(e.target.value)} ></textarea>
+      <textarea name="code" id="code" value={input} onChange={e => {setInput(e.target.value);onClick(e.target.value)}} ></textarea>
       <div className="button">
-        <button onClick={onClick}>Submit</button>
       </div>
       <iframe title='Code preview' ref={iframe} srcDoc={html}> {code}</iframe>
     </div>
