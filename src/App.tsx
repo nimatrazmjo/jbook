@@ -1,8 +1,9 @@
+import 'bulmaswatch/superhero/bulmaswatch.min.css';
 import React, { useEffect, useRef, useState } from 'react';
 
 import { unpkgPathPlugin } from './plugins/unpkg-path-plugin'
 import * as esbuild from 'esbuild-wasm';
-import CodeEditor from './components/code-editor';
+import CodeEditor from './components/code-editor/code-editor';
 
 const App: React.FC = () => {
   const ref = useRef({})
@@ -31,9 +32,9 @@ const App: React.FC = () => {
       write: false,
       plugins: [unpkgPathPlugin(input)]
     });
-    
+
     // setCode(result.outputFiles[0].text);
-    iframe.current.contentWindow.postMessage(result.outputFiles[0].text,'*')
+    iframe.current.contentWindow.postMessage(result.outputFiles[0].text, '*')
 
 
 
@@ -62,7 +63,10 @@ const App: React.FC = () => {
   `;
   return (
     <div className="app-component">
-      <CodeEditor />
+      <CodeEditor
+        initialValue='console.log("Hello")'
+        onChange={(value) => setInput(value)}
+      />
       <textarea name="code" id="code" value={input} onChange={e => setInput(e.target.value)} ></textarea>
       <div className="button">
         <button onClick={onClick}>Submit</button>
